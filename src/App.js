@@ -12,7 +12,6 @@ class MovieDepot extends React.Component {
       page: 1,
 
       adData: []
-
     }
   }
 
@@ -67,6 +66,11 @@ class MovieDepot extends React.Component {
     const title = e.target.value;
     this.setState({title})
   }
+  getInfo = (movie) => {
+    // const title = e.target.value;
+    console.log(movie)
+  }
+
   render() {
 
     let data;
@@ -90,10 +94,13 @@ class MovieDepot extends React.Component {
       data =  movies.map((movie, ind) => {
                 return (
                   <div key={ind} className="movie-content">
-                    <img src={movie.Poster} className="poster" alt="poster of movies" />
-                    <h5>Title: {movie.Title}</h5>
-                    <p>Year: {movie.Year}</p>
-                    <p>Type: {movie.Type}</p>
+                    <img src={movie.Poster} className="poster" alt="poster of movies" onClick={() => this.getInfo(movie)}/>
+                    {/* implement later */}
+                    { /* <div className="movie-info"> */}
+                      <h5>Title: {movie.Title}</h5>
+                      <p>Year: {movie.Year}</p>
+                      <p>Type: {movie.Type}</p>
+                    {/*</div> */}
                   </div>
                   )
               })

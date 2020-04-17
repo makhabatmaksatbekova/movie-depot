@@ -24,7 +24,7 @@ body {
           transition: 1.2s ease-in-out;
         }
         input:hover {
-            width: 30%;
+            width: 20%;
         }
         button {
           padding: 10px;
@@ -67,11 +67,19 @@ body {
                     height: 500px;
                     width: calc(100% / 4);
                     overflow: hidden;
+                    /*position: relative;*/
                 }
                     .poster {
                         width: 200px;
                         height: 320px;
                     }
+/*                    .movie-info {
+                        position: absolute;
+                        top: 0;
+                        left: 20%;
+                        right: 20%;
+                        bottom: 0;
+                    }*/
 
         .load-more p {
             display: inline-block;
