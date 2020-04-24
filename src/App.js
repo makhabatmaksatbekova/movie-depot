@@ -1,5 +1,10 @@
 import React from 'react';
 import './App.css';
+import Header from './components/Header';
+import Ad from './components/Ad';
+import Result from './components/Result';
+import SearchNav from './components/SearchNav';
+import ShowMore from './components/ShowMore';
 
 class MovieDepot extends React.Component {
   constructor(props) {
@@ -14,14 +19,27 @@ class MovieDepot extends React.Component {
       adData: []
     }
   }
-
   componentDidMount() {
-    const adTitle = "Blade Runner 2049"
-    fetch(`http://www.omdbapi.com/?s=${adTitle}&page=1&apikey=cb289192`)
-      .then(res => res.json())
-      .then(adData => {
-        this.setState({adData})
-    })
+    const adtitle = ["Blade Runner 2049", "Gladiator", "Get", "Date"];
+    // default ad poster
+    fetch(`http://www.omdbapi.com/?s=${adtitle[0]}&page=1&apikey=cb289192`)
+        .then(res => res.json())
+        .then(adData => {
+          this.setState({adData})
+      })  
+        // change ad poster every couple seconds
+    this.interval = setInterval(()=>{
+      const rdm = parseInt(Math.floor(Math.random()*4));
+      const randomAd = adtitle[rdm];
+      fetch(`http://www.omdbapi.com/?s=${randomAd}&page=1&apikey=cb289192`)
+        .then(res => res.json())
+        .then(adData => {
+          this.setState({adData})
+      })  
+    }, 10000)
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
   handleClick = () => {
     const { title }  = this.state;
@@ -72,82 +90,56 @@ class MovieDepot extends React.Component {
   }
 
   render() {
+    const { Response } = this.state.rawData;
+    const { rawData, movies, title, error, page, adData } = this.state;
 
     let data;
     let totalResults;
-    let movies;
     let ad; 
 
-    if (this.state.adData.Search) {
+    // ad movie
+    if (adData.Search) {
       const adMovie = this.state.adData.Search[0];
       ad = (
             <div className="add-content">
-              <img src={adMovie.Poster} id="ad-poster" alt="poster of ad movies" />
+              <img src={adMovie.Poster} id="ad-poster" alt="poster for ad movies" />
             </div>
         )
     }
-    if (this.state.rawData.Response === "True") {
-      totalResults = this.state.rawData.totalResults;
-      movies = this.state.movies;
+    
 
+    if (Response === "True") {
+      totalResults = rawData.totalResults;
 
       data =  movies.map((movie, ind) => {
                 return (
                   <div key={ind} className="movie-content">
                     <img src={movie.Poster} className="poster" alt="poster of movies" onClick={() => this.getInfo(movie)}/>
-                    {/* implement later */}
-                    { /* <div className="movie-info"> */}
                       <h5>Title: {movie.Title}</h5>
                       <p>Year: {movie.Year}</p>
                       <p>Type: {movie.Type}</p>
-                    {/*</div> */}
                   </div>
                   )
               })
-    } 
-    if (this.state.rawData.Response === "False") {
-      data = <div>{this.state.rawData.Error}</div>
+    } else {
+      data = <div>{rawData.Error}</div>
     }
 
     return (
       <div className="app">
-
-        <header>
-          <h3 id="title-header">Movie Depot</h3>
-        </header>
-
-        <section>
-          <div className="search-div">
-            <input type="text" id="search"  onChange={this.handleChange} value={this.state.title}/>
-            <button onClick={this.handleClick}>Search</button> 
-          </div>
-
-          <div className="error-display">
-            <span>{this.state.error}</span>
-          </div>
-        </section>
-
-        <section className="movie-ad" >
-        <p>Don't miss! <span id="ad-text">Ad</span></p>
-          {ad}
-        </section>
-
-        <section className="container">
-          <div className="total-results">
-          {
-            totalResults && <p> Total results: <span style={{color: "red"}}>{totalResults}</span></p> 
-          }
-          </div>
-          <div className="movies-container">
-            {
-              data
-            }
-          </div>
-        </section>
+        <Header />
+        <SearchNav 
+          handleChange={this.handleChange} 
+          handleClick={this.handleClick} 
+          title={title} 
+          error={error} />
+        <Ad ad={ad}/>
+        <Result 
+          totalResults={totalResults} 
+          data={data} />
         {
-          this.state.page >= 1 && this.state.rawData.Response === "True" ? ( <div className="load-more">
-                                    <p onClick={this.loadMoreMovies}>show more</p>
-                                  </div>): null
+          page >= 1 && Response === "True" ? 
+            (<ShowMore loadMoreMovies={this.loadMoreMovies}/>): null
         }
 
       </div>

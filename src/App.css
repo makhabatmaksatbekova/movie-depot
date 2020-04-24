@@ -36,19 +36,6 @@ body {
           text-transform: uppercase;
         }
 
-        #search {
-            background-image: url('./assets/search.png');
-            background-repeat: no-repeat;
-            background-size: contain; 
-        }
-        .error-display {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-            color: #f44336;
-            text-shadow: 0 10px 10px #eaea99;
-        }
-
         .container {
             width: 80%;
             display: inline-block;
@@ -73,13 +60,6 @@ body {
                         width: 200px;
                         height: 320px;
                     }
-/*                    .movie-info {
-                        position: absolute;
-                        top: 0;
-                        left: 20%;
-                        right: 20%;
-                        bottom: 0;
-                    }*/
 
         .load-more p {
             display: inline-block;
